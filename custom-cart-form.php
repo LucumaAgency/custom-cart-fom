@@ -168,17 +168,33 @@ final class Custom_Cart_Form {
 
     /**
      * AJAX: Remove item from cart.
+     * Supports cart_key directly or fallback search by product_id.
      */
     public function ajax_remove_item() {
         check_ajax_referer( 'ccf_nonce', 'nonce' );
 
-        $cart_key = sanitize_text_field( $_POST['cart_key'] ?? '' );
+        $cart_key   = sanitize_text_field( $_POST['cart_key'] ?? '' );
+        $product_id = (int) ( $_POST['product_id'] ?? 0 );
+        $removed    = false;
 
-        if ( ! $cart_key ) {
-            wp_send_json_error( 'Cart key inválido' );
+        // Try removing by cart_key first
+        if ( $cart_key && WC()->cart->get_cart_item( $cart_key ) ) {
+            $removed = WC()->cart->remove_cart_item( $cart_key );
         }
 
-        WC()->cart->remove_cart_item( $cart_key );
+        // Fallback: find by product_id
+        if ( ! $removed && $product_id ) {
+            foreach ( WC()->cart->get_cart() as $key => $item ) {
+                if ( (int) $item['product_id'] === $product_id ) {
+                    $removed = WC()->cart->remove_cart_item( $key );
+                    break;
+                }
+            }
+        }
+
+        if ( ! $removed ) {
+            wp_send_json_error( 'No se pudo eliminar el producto del carrito' );
+        }
 
         wp_send_json_success( $this->get_cart_response() );
     }
@@ -209,15 +225,26 @@ final class Custom_Cart_Form {
     }
 
     /**
-     * Build response with updated cart data.
+     * Build response with updated cart data + WC fragments for live price update.
      */
     private function get_cart_response() {
         WC()->cart->calculate_totals();
+
+        // Get WC cart fragments (mini-cart, totals, etc.)
+        ob_start();
+        woocommerce_mini_cart();
+        $mini_cart = ob_get_clean();
+
+        $fragments = apply_filters( 'woocommerce_add_to_cart_fragments', [
+            'div.widget_shopping_cart_content' => '<div class="widget_shopping_cart_content">' . $mini_cart . '</div>',
+        ] );
 
         return [
             'cart_total'    => WC()->cart->get_cart_total(),
             'cart_count'    => WC()->cart->get_cart_contents_count(),
             'cart_subtotal' => WC()->cart->get_cart_subtotal(),
+            'fragments'     => $fragments,
+            'cart_hash'     => WC()->cart->get_cart_hash(),
         ];
     }
 }
