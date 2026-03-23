@@ -93,6 +93,32 @@
 
 /* Loading state */
 .ccf-cart-form.ccf-loading {
-    opacity: 0.5;
     pointer-events: none;
+}
+
+.ccf-cart-form.ccf-loading .ccf-qty-wrapper {
+    opacity: 0.4;
+}
+
+.ccf-cart-form.ccf-loading .ccf-remove {
+    display: none;
+}
+
+/* Spinner */
+.ccf-spinner {
+    display: none;
+    width: 18px;
+    height: 18px;
+    border: 2.5px solid #e5e7eb;
+    border-top-color: #374151;
+    border-radius: 50%;
+    animation: ccf-spin 0.6s linear infinite;
+}
+
+.ccf-cart-form.ccf-loading .ccf-spinner {
+    display: block;
+}
+
+@keyframes ccf-spin {
+    to { transform: rotate(360deg); }
 }
