@@ -1,0 +1,98 @@
+/* ── Custom Cart Form ── */
+
+.ccf-cart-form {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Quantity wrapper */
+.ccf-qty-wrapper {
+    display: inline-flex;
+    align-items: center;
+    border: 1.5px solid #d1d5db;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #fff;
+    transition: border-color 0.2s;
+}
+
+.ccf-qty-wrapper:hover {
+    border-color: #9ca3af;
+}
+
+/* Buttons +/- */
+.ccf-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    font-size: 18px;
+    font-weight: 600;
+    color: #374151;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    user-select: none;
+    line-height: 1;
+    padding: 0;
+}
+
+.ccf-btn:hover {
+    background: #f3f4f6;
+    color: #111827;
+}
+
+.ccf-btn:active {
+    background: #e5e7eb;
+}
+
+/* Quantity input */
+.ccf-qty-input {
+    width: 38px;
+    height: 36px;
+    border: none;
+    border-left: 1px solid #e5e7eb;
+    border-right: 1px solid #e5e7eb;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+    background: #fff;
+    -moz-appearance: textfield;
+    padding: 0;
+    margin: 0;
+}
+
+.ccf-qty-input::-webkit-outer-spin-button,
+.ccf-qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Remove / trash button */
+.ccf-remove {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: none;
+    background: transparent;
+    color: #6b7280;
+    cursor: pointer;
+    transition: color 0.2s;
+    padding: 0;
+}
+
+.ccf-remove:hover {
+    color: #ef4444;
+}
+
+/* Loading state */
+.ccf-cart-form.ccf-loading {
+    opacity: 0.5;
+    pointer-events: none;
+}
